@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>getSelection</title>
+  <style>
+    pre {
+      background-color: #ccc;
+      min-height: 1em;
+    }
+    div::before {
+      content: "DIV >>>"
+    }
+    div::after {
+      content: "<<< DIV"
+    }
+    #feedback {
+      -webkit-user-select: none;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <p id="one">Click and drag       to make a selection 👍🏼</p>
+  <p id="two">Your selection can <i>start</i> on one line and <i>end</i> on another.</p>
+  <div>
+    <img src="https://picsum.photos/32/32" alt="picsum image">
+  </div>
+  <input type="text" placeholder="text input">
+  <pre id="feedback"></pre>
+
+  <script>
+    const feedback = document.getElementById("feedback")
+    document.body.addEventListener("mousemove", showSelection)
+    document.body.addEventListener("mouseup", showSelection)
+
+    function showSelection() {
+      const selection = window.getSelection()
+      if (!selection.rangeCount) {
+        feedback.innerText = "selection.rangeCount: 0"
+        return
+      }
+
+      const range = selection.getRangeAt(0)
+
+      const start = range.startContainer
+      const startName = start.nodeName
+      let startParent = range.startContainer.parentElement
+      let id = startParent.id
+      startParent = startParent.tagName.toLowerCase()
+                  + (id ? `#${id}` : "")
+
+      const end = range.endContainer
+      const endName = end.nodeName
+      let endParent = range.endContainer.parentElement
+      id = endParent.id
+      endParent = endParent.tagName.toLowerCase()
+                + (id ? `#${id}` : "")
+      
+      feedback.innerText = `'${selection}'
+range.startContainer.nodeName:      ${startName}
+range.startContainer.parentElement: ${startParent}
+range.startOffset:                  ${range.startOffset}
+
+range.endContainer.nodeName:        ${endName}
+range.endContainer.parentElement:   ${endParent}
+range.endOffset:                    ${range.endOffset}`
+    }
+  </script>
+</body>
+</html>
