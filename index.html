@@ -4,43 +4,79 @@
   <title>getSelection</title>
   <style>
     body {
-      color: #222;
-      background-color: #fff;
+      color: #ddd;
+      background-color: #111;
+    }
+    div#image {
+      text-align: center;
+      img {
+        vertical-align: middle;
+      }
+      &::before {
+        content: "::before\00a0\00a0";
+      }
+      &::after {
+        content: "\00a0\00a0::after"
+      }
+    }
+    input {
+      margin: 1em 0;
+      width: 100%;
     }
     pre {
-      background-color: #ccc;
+      background-color: #333;
       min-height: 1em;
+      margin-top: 0;
+      white-space: pre-wrap;
     }
-    div::before {
-      content: "DIV >>>"
-    }
-    div::after {
-      content: "<<< DIV"
-    }
-    #feedback {
+    pre,
+    .feedback {
       -webkit-user-select: none;
       user-select: none;
+
+      & span {
+        display: inline-block;
+        font-family: monospace;
+        text-decoration: underline;
+        width: 100%;
+        text-align: center;
+      }
     }
   </style>
 </head>
 <body>
   <p id="one">Click and drag       to make a selection 👍🏼</p>
   <p id="two">Your selection can <i>start</i> on one line and <i>end</i> on another.</p>
-  <div>
-    <img src="https://picsum.photos/32/32" alt="picsum image">
+  <div id="image">
+    <img
+      src="https://picsum.photos/48/48"
+      alt="random image from https://picsum.photos/48/48"
+    >
   </div>
   <input type="text" placeholder="text input">
-  <pre id="feedback"></pre>
+  <div class="feedback">
+    <span>selection.toString()</span>
+    <pre id="selection"></pre>
+  </div>
+  <div class="feedback">
+    <span>selection.getRangeAt(0)</span>
+    <pre id="range"></pre>
+  </div>
 
   <script>
-    const feedback = document.getElementById("feedback")
-    document.body.addEventListener("mousemove", showSelection)
-    document.body.addEventListener("mouseup", showSelection)
+    let ii = 0
+    const selectionP = document.getElementById("selection")
+    const rangeP = document.getElementById("range")
+
+    const selection = window.getSelection()
+
+    setInterval(showSelection, 100)
 
     function showSelection() {
-      const selection = window.getSelection()
+      console.log("ii:", ++ii)
       if (!selection.rangeCount) {
-        feedback.innerText = "selection.rangeCount: 0"
+        selectionP.innerText = "selection.rangeCount: 0"
+        rangeP.innerText = ""
         return
       }
 
@@ -59,9 +95,11 @@
       id = endParent.id
       endParent = endParent.tagName.toLowerCase()
                 + (id ? `#${id}` : "")
-      
-      feedback.innerText = `'${selection}'
-range.startContainer.nodeName:      ${startName}
+
+      selectionP.innerText = selection
+
+      rangeP.innerText =
+`range.startContainer.nodeName:      ${startName}
 range.startContainer.parentElement: ${startParent}
 range.startOffset:                  ${range.startOffset}
 
