@@ -46,7 +46,7 @@
 </head>
 <body>
   <p id="one">Click and drag       to make a selection 👍🏼</p>
-  <p id="two">Your selection can <i>start</i> on one line and <i>end</i> on another.</p>
+  <p id="two">Your selection can <i>start</i> on one line and <i>end</i><b></b><span> on another.</span></p>
   <div id="image">
     <img
       src="https://picsum.photos/48/48"
@@ -73,7 +73,6 @@
     setInterval(showSelection, 100)
 
     function showSelection() {
-      console.log("ii:", ++ii)
       if (!selection.rangeCount) {
         selectionP.innerText = "selection.rangeCount: 0"
         rangeP.innerText = ""
